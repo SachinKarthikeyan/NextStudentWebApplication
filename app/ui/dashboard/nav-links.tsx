@@ -1,5 +1,4 @@
 'use client'
-
 import {
   UserGroupIcon,
   HomeIcon,
@@ -33,20 +32,23 @@ interface NavLinksProps {
   userRole: string;
 }
 
-const userRole = userData[0].role; // Make sure you're using userData[0] for Department
-
 export default function NavLinks({ userRole }: NavLinksProps) {
   const pathname = usePathname();
-  const adminDepartmentLink = '/dashboard/department'; 
-  const otherPageLink = '/dashboard/error'; 
-  
-  console.log('User Role:', userRole); // Add this line for debugging
 
   return (
     <>
       {links.map((link) => {
         const LinkIcon = link.icon;
-        const linkHref = userRole === 'admin' ? adminDepartmentLink : otherPageLink;
+        let linkHref = link.href; // Set the default link to the link's href
+
+        // If it's the Department link, check the user's role
+        if (link.name === 'Department') {
+          if (userRole === 'admin') {
+            linkHref = '/dashboard/department'; // Admins go to the department page
+          } else {
+            linkHref = '/dashboard/error'; // Others go to an error page
+          }
+        }
         
         return (
           <Link
